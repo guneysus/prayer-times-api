@@ -190,7 +190,7 @@ def index(name):
 
 if __name__ == '__main__':
     # print(api.ulkeler())
-    bottle.run(host='0.0.0.0', port=8080, debug=False, reloader=False)
+    bottle.run(host='0.0.0.0', port=8000, debug=False, reloader=False)
 
 app = bottle.default_app()
 
