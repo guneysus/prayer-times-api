@@ -1,7 +1,7 @@
 import bottle
 from bottle import route
 
-from  prayer_times.lib import db, DiyanetApiV1
+from  lib import db, DiyanetApiV1
 
 api = DiyanetApiV1()
 
@@ -18,7 +18,7 @@ def api_ulke_sehir_ilce_haftalik(country_id, city_id, county_id):
 
 @route('/api/countries/<country_id:int>/cities/<city_id:int>/counties/<county_id:int>/daily')
 def api_ulke_sehir_ilce_gunluk(country_id, city_id, county_id):
-    return api.daily(county_id)
+    return api.daily_by_name(county_id)
 
 
 @route('/api/countries/<country_id:int>/cities/<city_id:int>/counties/<county_id:int>')
@@ -43,12 +43,12 @@ def api_ulkeler():
 
 @route('/api/<name:re:[a-z]+>/daily')
 def api_daily_by_name(name):
-    return api.daily(nid=db.get(name))
+    return api.daily_by_name(name=db.get(name))
 
 
 @route('/api/<nid:int>/daily')
 def api_daily_by_id(nid):
-    return api.daily(nid)
+    return api.daily_by_name(nid)
 
 app = bottle.default_app()
 

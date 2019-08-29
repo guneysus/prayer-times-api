@@ -161,8 +161,8 @@ class DiyanetApiV1(object):
     def __init__(self):
         super(DiyanetApiV1, self).__init__()
 
-    def daily(self, nid):
-        return self.adapter(self.__api.gunluk(nid))
+    def daily_by_name(self, name):
+        return self.adapter(self.__api.gunluk(db.get(name)))
 
     def weekly(self, nid):
         result = self.__api.haftalik(nid)
@@ -171,10 +171,6 @@ class DiyanetApiV1(object):
     def monthly(self, nid):
         result = self.__api.aylik(nid)
         return  dict(data=list(map(self.adapter, result['data'])))
-
-    def name(self, nid):
-        detay = self.__api.ilcedetay(nid)
-        return detay
 
     def countries(self):
         return self.__api.ulkeler()
