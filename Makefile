@@ -9,7 +9,7 @@ build_egg:
 build_docker: build_whl
 	docker build -t guneysu/prayer-times-api:latest .
 
-push_docker: build_whl
+push_docker:
 	docker push guneysu/prayer-times-api:latest
 
 run_docker:
