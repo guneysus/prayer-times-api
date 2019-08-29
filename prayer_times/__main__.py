@@ -19,6 +19,7 @@ db = dict(
     tekirdag=9879,
 )
 
+
 class Api(object):
     client = Client('http://namazvakti.diyanet.gov.tr/wsNamazVakti.svc?wsdl')
     # client.service.GunlukNamazVakti(9541, "namazuser", "NamVak!14")
@@ -74,6 +75,7 @@ class Api(object):
         # //return Api.IlceDetay(9541);
         # return Api.BayramNamaziSehir(539);
         # //return Api.Imsakiye(9541);
+
 
 class DiyanetApi(Api):
     def __init__(self):
@@ -139,6 +141,7 @@ class DiyanetApi(Api):
     def gunluk(self, ilceid):
         return self.vakit_parser(super(DiyanetApi, self).gunluk(ilceid))
 
+
 class DiyanetApiV1(object):
     __api = DiyanetApi()
 
@@ -152,6 +155,12 @@ class DiyanetApiV1(object):
             maghrib=namazvakti['Aksam'],
             isha=namazvakti['Yatsi'],
             hijri=namazvakti['HicriUzun'],
+            # hijri_short=namazvakti['HicriKisa'],
+            gregorian=namazvakti['MiladiUzun'],
+            # gregorian_short=namazvakti['MiladiKisa'],
+            # kiblah_time=namazvakti['KibleSaati'],
+            # moon=namazvakti['Moon']
+
         )
 
     def __init__(self):
@@ -160,38 +169,84 @@ class DiyanetApiV1(object):
     def daily(self, nid):
         return self.adapter(self.__api.gunluk(nid))
 
+    def weekly(self, nid):
+        result = self.__api.haftalik(nid)
+        return  dict(data=list(map(self.adapter, result['data'])))
+
+    def monthly(self, nid):
+        result = self.__api.aylik(nid)
+        return  dict(data=list(map(self.adapter, result['data'])))
+
     def name(self, nid):
         detay = self.__api.ilcedetay(nid)
         return detay
 
+    def countries(self):
+        return self.__api.ulkeler()
+
+    def cities(self, country_id):
+        return self.__api.sehirler(country_id)
+
+    def counties(self, city_id):
+        return self.__api.ilceler(city_id)
+
+    def county_detail(self, county_id):
+        return self.__api.ilcedetay(county_id)
+
+    def county_daily(self, county_id):
+        return self.__api.gunluk_sehir(county_id)
 
 api = DiyanetApiV1()
 
 
-@route('/api/<nid:int>')
-def index(nid):
+@route('/api/<nid:int>/daily')
+def api_daily_by_id(nid):
     return api.daily(nid)
 
+@route('/api/<name:re:[a-z]+>/daily')
+def api_daily_by_name(name):
+    return api.daily(nid=db.get(name))
 
 # @route('/api/istanbul')
 # def index():
 #     return api.daily(9541)
 
+@route('/api/countries')
+def api_ulkeler():
+    return api.countries()
 
-@route('/api/<name:re:[a-z]+>')
-def index(name):
-    return api.daily(nid=db.get(name))
+@route('/api/countries/<nid:int>/cities')
+def api_ulke_sehirler(nid):
+    return api.cities(nid)
+
+
+@route('/api/countries/<country_id:int>/cities/<city_id:int>/counties')
+def api_ulke_sehir_ilceler(country_id, city_id):
+    return api.counties(city_id)
+
+@route('/api/countries/<country_id:int>/cities/<city_id:int>/counties/<county_id:int>')
+def api_ulke_sehir_ilce_detay(country_id, city_id, county_id):
+    return api.county_detail(county_id)
+
+@route('/api/countries/<country_id:int>/cities/<city_id:int>/counties/<county_id:int>/daily')
+def api_ulke_sehir_ilce_gunluk(country_id, city_id, county_id):
+    return api.daily(county_id)
+
+@route('/api/countries/<country_id:int>/cities/<city_id:int>/counties/<county_id:int>/weekly')
+def api_ulke_sehir_ilce_haftalik(country_id, city_id, county_id):
+    return api.weekly(county_id)
+
+@route('/api/countries/<country_id:int>/cities/<city_id:int>/counties/<county_id:int>/monthly')
+def api_ulke_sehir_ilce_aylik(country_id, city_id, county_id):
+    return api.monthly(county_id)
 
 
 # @route('/api/<name:re:[a-z]+>/info')
 # def index(name):
 #     return api.name(nid=db.get(name))
 
-
 if __name__ == '__main__':
     # print(api.ulkeler())
     bottle.run(host='0.0.0.0', port=8000, debug=False, reloader=False)
 
 app = bottle.default_app()
-
-
