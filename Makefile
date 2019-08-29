@@ -12,4 +12,7 @@ build_docker: build_whl
 push_docker: build_whl
 	docker push guneysu/prayer-times-api:latest
 
-.PHONY: default build_whl build_egg build_docker push_docker
+run_docker:
+	docker run -itd -p 8000:8000 guneysu/prayer-times-api:latest
+
+.PHONY: default build_whl build_egg build_docker push_docker run_docker

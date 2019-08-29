@@ -2,7 +2,8 @@
 set -ex
 
 download() {
-	http http://localhost:8000/api/$1 -d -o ../api/daily/$1.json
+	mkdir -p _data/api/$1
+	curl http://localhost:8000/api/$1/daily -o _data/api/$1/daily.json
 }
 
 download istanbul
