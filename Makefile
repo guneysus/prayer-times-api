@@ -13,7 +13,7 @@ push_docker:
 	docker push guneysu/prayer-times-api:latest
 
 run_docker:
-	docker run -itd -p 8000:8000 guneysu/prayer-times-api:latest
+	bash run_docker.sh
 
 install:
 	python setup.py install
@@ -21,4 +21,7 @@ install:
 test_simple:
 	python -c "import prayer_times.lib as l; print(l.api.daily_by_name('istanbul'))"
 
-.PHONY: default build_whl build_egg build_docker push_docker run_docker install test_simple
+stop_all:
+	docker ps --no-trunc -q | xargs docker stop
+	
+.PHONY: default build_whl build_egg build_docker push_docker run_docker install test_simple stop_all
