@@ -1,10 +1,11 @@
+SETUP=python setup.py
 default:
 
 build_whl:
-	python.exe setup.py bdist_wheel
+	$(SETUP) bdist_wheel
 
 build_egg:
-	python.exe setup.py bdist_egg
+	$(SETUP) bdist_egg
 
 build_docker: build_whl
 	docker build -t guneysu/prayer-times-api:latest .
@@ -16,7 +17,7 @@ run_docker:
 	bash run_docker.sh
 
 install:
-	python setup.py install
+	$(SETUP) install
 
 test_simple:
 	python -c "import prayer_times.lib as l; print(l.api.daily_by_name('istanbul'))"
