@@ -1,7 +1,7 @@
 import bottle
 from bottle import route
 
-from .lib import db, DiyanetApiV1
+from .lib import db, DiyanetApiV1, city_db
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -70,6 +70,57 @@ def api_monthly_by_name(name):
     logging.info(f'name: {name}, nid: {nid}')
     response = api.monthly(nid)
     return response
+
+@route('/api/<name:re:[a-z]+>/ramadan-timetable')
+def api_ramadan_timetable_by_name(name):
+    nid = db.get(name)
+    logging.info(f'name: {name}, nid: {nid}')
+    response = api.ramadan_timetable(nid)
+    return response
+
+@route('/api/<name:re:[a-z]+>/bairam')
+def api_bairam_by_name(name):
+    nid = db.get(name)
+    logging.info(f'name: {name}, nid: {nid}')
+    response = api.bairam(nid)
+    return response
+
+@route('/api/<name:re:[a-z]+>/sacrifice-all')
+def api_bairam_all_by_name(name):
+    nid = city_db.get(name)
+    logging.info(f'name: {name}, nid: {nid}')
+    response = api.bairam_all(nid)
+    return dict ( data = adapter_sacrifice(response) )
+
+@route('/api/<name:re:[a-z]+>/ramadan-all')
+def api_bairam_all_by_name(name):
+    nid = city_db.get(name)
+    logging.info(f'name: {name}, nid: {nid}')
+    response = api.bairam_all(nid)
+    return dict ( data = adapter_ramadan(response) )
+
+
+def adapter_sacrifice(arr):
+    return [
+        dict(
+            countyName = k.ilceBilgisi.IlceAdi,
+            hijriDate = k.bayramNamazVakti.KurbanBayramNamaziHTarihi,
+            gregorianDate =  k.bayramNamazVakti.KurbanBayramNamaziTarihi,
+            time = k.bayramNamazVakti.KurbanBayramNamaziSaati
+
+        )  for k in arr.BayramNamazVaktiIlceListesi
+    ]
+
+def adapter_ramadan(arr):
+    return [
+        dict(
+            countyName = k.ilceBilgisi.IlceAdi,
+            hijriDate = k.bayramNamazVakti.RamazanBayramNamaziHTarihi,
+            gregorianDate =  k.bayramNamazVakti.RamazanBayramNamaziTarihi,
+            time = k.bayramNamazVakti.RamazanBayramNamaziSaati
+
+        )  for k in arr.BayramNamazVaktiIlceListesi
+    ]
 
 
 @route('/api/<nid:int>/daily')

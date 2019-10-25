@@ -15,6 +15,19 @@ db = dict(
     tekirdag=9879,
 )
 
+city_db = dict (
+    istanbul=539,
+    ankara=506,
+    bursa=520,
+    erzurum=530,
+    eskisehir=531,
+    gaziantep=532,
+    izmir=540,
+    kayseri=546,
+    konya=552,
+    sakarya=565,
+    tekirdag=572,
+)
 
 class Api(object):
     client = Client('http://namazvakti.diyanet.gov.tr/wsNamazVakti.svc?wsdl')
@@ -50,7 +63,8 @@ class Api(object):
         return dict(self.service.BayramNamaziVakti(ilceid, **self.auth))
 
     def bayram_tum(self, sehirid):
-        return dict(self.service.BayramNamaziVaktiIlceListesi(sehirid, **self.auth))
+        result = self.service.BayramNamaziVaktiIlceListesi(sehirid, **self.auth)
+        return result # dict(result)
 
     def imsakiye(self, ilceid):
         return self.service.Imsakiye(ilceid, **self.auth)[0]
@@ -133,9 +147,12 @@ class DiyanetApi(Api):
 
         return dict(data=data)
 
+    def bayram(self, ilceid):
+        result = super(DiyanetApi, self).bayram(ilceid)
+        return dict(data=result)
+
     def gunluk(self, ilceid):
         return self.vakit_parser(super(DiyanetApi, self).gunluk(ilceid))
-
 
 class DiyanetApiV1(object):
     __api = DiyanetApi()
@@ -173,6 +190,35 @@ class DiyanetApiV1(object):
     def monthly(self, nid):
         result = self.__api.aylik(nid)
         return  dict(data=list(map(self.adapter, result['data'])))
+
+    def ramadan_timetable(self, nid):
+        result = self.__api.imsakiye(nid)
+        return  dict(data=list(map(self.adapter, result['data'])))
+
+    @staticmethod
+    def adapter(namazvakti):
+        return dict(
+            sacrificePrayerTime=namazvakti['KurbanBayramNamaziSaati'],
+            sacrificePrayerHijri_date=namazvakti['KurbanBayramNamaziHTarihi'],
+            sacrificePrayerGregorian_date=namazvakti['KurbanBayramNamaziTarihi'],
+
+            ramadanPrayerTime=namazvakti['RamazanBayramNamaziSaati'],
+            ramadanPrayerHijri_date=namazvakti['RamazanBayramNamaziHTarihi'],
+            ramadanPrayerGregorian_date=namazvakti['RamazanBayramNamaziTarihi'],
+
+
+        )
+
+
+    def bairam(self, nid):
+        result = self.__api.bayram(nid)
+        return self.adapter(result['data'])
+
+    def bairam_all(self, nid):
+        result = self.__api.bayram_tum(nid)
+        return result #self.adapter(result['data'])
+
+
 
     def countries(self):
         return self.__api.ulkeler()
