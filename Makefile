@@ -7,21 +7,24 @@ VERSION := $(shell cat VERSION)
 PACKAGE=build_python
 BUILD=build
 
-default: $(BUILD)
+default: build
 
-$(PACKAGE):
+build_python:
 	$(SETUP_CMD) bdist_wheel
 
-$(BUILD): $(PACKAGE)
+build: build_python
 	$(BUILD_CMD) $(ARGS) $(IMAGE):$(VERSION) .
 	$(BUILD_CMD) $(ARGS) $(IMAGE):latest .
 
-push: $(BUILD)
+push: build
 	$(PUSH_CMD) $(IMAGE):$(VERSION)
 	$(PUSH_CMD) $(IMAGE):latest
 
-run:
-	bash run_docker.sh
+run: build
+	bash scripts/run_docker.sh
+
+run_local:
+	gunicorn prayer_times.web:app --bind=0.0.0.0:30000
 
 install:
 	$(SETUP_CMD) install
@@ -35,4 +38,4 @@ stop:
 debug:
 	echo $(VERSION)
 	
-.PHONY: default build_python build push run install test stop debug
+.PHONY: default build_python build push run run_local install test stop debug

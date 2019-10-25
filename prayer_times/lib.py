@@ -1,4 +1,5 @@
 from suds import Client
+import logging
 
 db = dict(
     istanbul=9541,
@@ -45,7 +46,6 @@ class Api(object):
     def gunluk_sehir(self, sehiradi):
         return self.service.GunlukNamazVakti_SehirAdinaGore(sehiradi,
                                                             **self.auth)
-
     def bayram(self, ilceid):
         return dict(self.service.BayramNamaziVakti(ilceid, **self.auth))
 
@@ -161,8 +161,10 @@ class DiyanetApiV1(object):
     def __init__(self):
         super(DiyanetApiV1, self).__init__()
 
-    def daily_by_name(self, name):
-        return self.adapter(self.__api.gunluk(db.get(name)))
+    def daily(self, nid):
+        raw_response = self.__api.gunluk(nid)
+        response = self.adapter(raw_response)
+        return response
 
     def weekly(self, nid):
         result = self.__api.haftalik(nid)
