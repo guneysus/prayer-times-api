@@ -1,9 +1,10 @@
 SETUP_CMD=python setup.py
-BUILD_CMD=docker build
 PUSH_CMD=docker push
-ARGS=-t
+BUILD_CMD=docker build 
+
 IMAGE=guneysu/prayer-times-api
 VERSION := $(shell cat VERSION)
+ARGS=--build-arg VERSION=$(VERSION) -t
 PACKAGE=build_python
 BUILD=build
 
@@ -38,4 +39,10 @@ stop:
 debug:
 	echo $(VERSION)
 	
-.PHONY: default build_python build push run run_local install test stop debug
+up:
+	docker-compose up -d
+
+down:
+	docker-compose down
+
+.PHONY: default build_python build push run run_local install test stop debug up down

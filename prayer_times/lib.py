@@ -1,33 +1,7 @@
 from suds import Client
 import logging
+from .data import db, city_db, country_db
 
-db = dict(
-    istanbul=9541,
-    ankara=9206,
-    bursa=9335,
-    erzurum=9541,
-    eskisehir=9471,
-    gaziantep=9479,
-    izmir=9560,
-    kayseri=9620,
-    konya=9676,
-    sakarya=9807,
-    tekirdag=9879,
-)
-
-city_db = dict (
-    istanbul=539,
-    ankara=506,
-    bursa=520,
-    erzurum=530,
-    eskisehir=531,
-    gaziantep=532,
-    izmir=540,
-    kayseri=546,
-    konya=552,
-    sakarya=565,
-    tekirdag=572,
-)
 
 class Api(object):
     client = Client('http://namazvakti.diyanet.gov.tr/wsNamazVakti.svc?wsdl')
@@ -196,23 +170,30 @@ class DiyanetApiV1(object):
         return  dict(data=list(map(self.adapter, result['data'])))
 
     @staticmethod
-    def adapter(namazvakti):
+    def adapter_ramadan(namazvakti):
         return dict(
-            sacrificePrayerTime=namazvakti['KurbanBayramNamaziSaati'],
-            sacrificePrayerHijri_date=namazvakti['KurbanBayramNamaziHTarihi'],
-            sacrificePrayerGregorian_date=namazvakti['KurbanBayramNamaziTarihi'],
-
             ramadanPrayerTime=namazvakti['RamazanBayramNamaziSaati'],
-            ramadanPrayerHijri_date=namazvakti['RamazanBayramNamaziHTarihi'],
-            ramadanPrayerGregorian_date=namazvakti['RamazanBayramNamaziTarihi'],
-
-
+            ramadanPrayerHijriDate=namazvakti['RamazanBayramNamaziHTarihi'],
+            ramadanPrayerGregorianDate=namazvakti['RamazanBayramNamaziTarihi'],
         )
 
 
-    def bairam(self, nid):
+    @staticmethod
+    def adapter_sacrifice(namazvakti):
+        return dict(
+            sacrificePrayerTime=namazvakti['KurbanBayramNamaziSaati'],
+            sacrificePrayerHijriDate=namazvakti['KurbanBayramNamaziHTarihi'],
+            sacrificePrayerGregorianDate=namazvakti['KurbanBayramNamaziTarihi']
+        )
+
+
+    def sacrifice(self, nid):
         result = self.__api.bayram(nid)
-        return self.adapter(result['data'])
+        return self.adapter_sacrifice(result['data'])
+
+    def ramadan(self, nid):
+        result = self.__api.bayram(nid)
+        return self.adapter_ramadan(result['data'])        
 
     def bairam_all(self, nid):
         result = self.__api.bayram_tum(nid)

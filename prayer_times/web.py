@@ -78,12 +78,20 @@ def api_ramadan_timetable_by_name(name):
     response = api.ramadan_timetable(nid)
     return response
 
-@route('/api/<name:re:[a-z]+>/bairam')
-def api_bairam_by_name(name):
+@route('/api/<name:re:[a-z]+>/sacrifice')
+def api_sacrifice_by_name(name):
     nid = db.get(name)
     logging.info(f'name: {name}, nid: {nid}')
-    response = api.bairam(nid)
+    response = api.sacrifice(nid)
     return response
+
+
+@route('/api/<name:re:[a-z]+>/ramadan')
+def api_ramadan_by_name(name):
+    nid = db.get(name)
+    logging.info(f'name: {name}, nid: {nid}')
+    response = api.ramadan(nid)
+    return response    
 
 @route('/api/<name:re:[a-z]+>/sacrifice-all')
 def api_bairam_all_by_name(name):

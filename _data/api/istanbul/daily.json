@@ -1,1 +1,19 @@
-{"fajr": "05:21", "sunrise": "06:46", "dhuhr": "13:01", "asr": "16:25", "maghrib": "19:07", "isha": "20:27", "hijri": "25 MUHARREM 1441", "gregorian": "24 Eyl\u00fcl 2019 Sal\u0131"}
+
+    <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+    <html>
+        <head>
+            <title>Error: 500 Internal Server Error</title>
+            <style type="text/css">
+              html {background-color: #eee; font-family: sans;}
+              body {background-color: #fff; border: 1px solid #ddd;
+                    padding: 15px; margin: 15px;}
+              pre {background-color: #eee; border: 1px solid #ddd; padding: 5px;}
+            </style>
+        </head>
+        <body>
+            <h1>Error: 500 Internal Server Error</h1>
+            <p>Sorry, the requested URL <tt>&#039;http://127.0.0.1:32772/api/istanbul/daily&#039;</tt>
+               caused an error:</p>
+            <pre>Internal Server Error</pre>
+        </body>
+    </html>
