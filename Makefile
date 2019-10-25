@@ -1,28 +1,38 @@
-SETUP=python setup.py
-default:
+SETUP_CMD=python setup.py
+BUILD_CMD=docker build
+PUSH_CMD=docker push
+ARGS=-t
+IMAGE=guneysu/prayer-times-api
+VERSION := $(shell cat VERSION)
+PACKAGE=build_python
+BUILD=build
 
-build_whl:
-	$(SETUP) bdist_wheel
+default: $(BUILD)
 
-build_egg:
-	$(SETUP) bdist_egg
+$(PACKAGE):
+	$(SETUP_CMD) bdist_wheel
 
-build_docker: build_whl
-	docker build -t guneysu/prayer-times-api:latest .
+$(BUILD): $(PACKAGE)
+	$(BUILD_CMD) $(ARGS) $(IMAGE):$(VERSION) .
+	$(BUILD_CMD) $(ARGS) $(IMAGE):latest .
 
-push_docker:
-	docker push guneysu/prayer-times-api:latest
+push: $(BUILD)
+	$(PUSH_CMD) $(IMAGE):$(VERSION)
+	$(PUSH_CMD) $(IMAGE):latest
 
-run_docker:
+run:
 	bash run_docker.sh
 
 install:
-	$(SETUP) install
+	$(SETUP_CMD) install
 
-test_simple:
+test:
 	python -c "import prayer_times.lib as l; print(l.api.daily_by_name('istanbul'))"
 
-stop_all:
+stop:
 	docker ps --no-trunc -q | xargs docker stop
+
+debug:
+	echo $(VERSION)
 	
-.PHONY: default build_whl build_egg build_docker push_docker run_docker install test_simple stop_all
+.PHONY: default build_python build push run install test stop debug
