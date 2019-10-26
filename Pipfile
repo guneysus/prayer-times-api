@@ -4,6 +4,8 @@ name = "pypi"
 url = "https://pypi.org/simple"
 
 [dev-packages]
+pylint = "*"
+rope = "*"
 
 [packages]
 bottle = "==0.12.16"

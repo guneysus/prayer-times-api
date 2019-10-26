@@ -4,5 +4,13 @@ services:
   api:
     image: guneysu/prayer-times-api:latest
     ports:
-      - 8000:80
+      - 8000:8000
 
+  agent:
+    build:
+       context: .
+       dockerfile: tasks/Dockerfile
+    volumes:
+      - ./_data:/data
+    links:
+      - api:api
