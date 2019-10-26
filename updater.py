@@ -5,12 +5,31 @@ from prayer_times.data import db, city_db, country_db
 from pprint import pprint
 import click
 import requests
+import json
+import codecs
+import os
 
 
-def get_json(url):
+def ensure_dir(file_path):
+    directory = os.path.dirname(file_path)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+
+def get_json(path, host):
+    url = host + path
     r = requests.get(url)
     r.raise_for_status()
-    return r.json()
+    return (r.json(), path)
+
+def save_json(data, path, base_folder):
+    file_path = base_folder + path + '.json'
+    ensure_dir(file_path)
+
+    with codecs.open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(data, f)
+
+    return path
 
 @click.command()
 @click.option('--city', '-c', type=str, required=True)
@@ -18,14 +37,15 @@ def get_json(url):
 @click.option('--host', '-h', type=str, required=True)
 def main(city, period, host):
 
-    urls = Urls()
-    url_list = urls.custom_cities(city.split(','), period.split(','))
-    full_urls = map(lambda x: host + x, url_list)
+    helper = UrlHelper()
+    url_list = helper.custom_cities(city.split(','), period.split(','))
+    # full_urls = map(lambda x: (x, host + x), url_list)
     # dump_list(full_urls)
-    results = tuple(map(lambda x: get_json(x), full_urls))
-    print(results)
+    results = map(lambda x: get_json(x, host), url_list)
+    file_results = map(lambda x: save_json( *x, '_data'), results)
+    return list(file_results)
 
-class Urls:
+class UrlHelper:
     @property
     def all(self):
         result = []

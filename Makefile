@@ -1,12 +1,16 @@
 SETUP_CMD=python setup.py
 PUSH_CMD=docker push
 BUILD_CMD=docker build 
+UPDATER=python updater.py
 
 IMAGE=guneysu/prayer-times-api
 VERSION := $(shell cat VERSION)
 ARGS=--build-arg VERSION=$(VERSION) -t
 PACKAGE=build_python
 BUILD=build
+
+CITIES=istanbul,ankara,bursa,erzurum,eskisehir,gaziantep,izmir,kayseri,konya,sakarya,tekirdag
+HOST=http://localhost:8000
 
 default: build
 
@@ -36,8 +40,12 @@ test:
 stop:
 	docker ps --no-trunc -q | xargs docker stop
 
-debug:
-	echo $(VERSION)
+
+update_%:
+	# echo $*
+	$(UPDATER) -c $(CITIES) -p $* -h $(HOST)
+
+update: update_daily # update_weekly update_monthly
 	
 up:
 	docker-compose up -d --build
@@ -45,4 +53,8 @@ up:
 down:
 	docker-compose down
 
-.PHONY: default build_python build push run run_local install test stop debug up down
+# daily weekly monthly:
+# 	$(UPDATER) -c $(CITIES) -p daily -h $(HOST)
+
+.PHONY: default build_python build push run run_local install test stop up down
+
