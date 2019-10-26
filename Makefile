@@ -34,18 +34,13 @@ run_local:
 install:
 	$(SETUP_CMD) install
 
-test:
-	python -c "import prayer_times.lib as l; print(l.api.daily_by_name('istanbul'))"
-
 stop:
 	docker ps --no-trunc -q | xargs docker stop
 
-
 update_%:
-	# echo $*
-	$(UPDATER) -c $(CITIES) -p $* -h $(HOST)
+	$(UPDATER) -c $(CITIES) -p $* -h $(HOST) -b _data
 
-update: update_daily # update_weekly update_monthly
+update: update_daily update_weekly update_monthly
 	
 up:
 	docker-compose up -d --build
@@ -53,8 +48,11 @@ up:
 down:
 	docker-compose down
 
-# daily weekly monthly:
-# 	$(UPDATER) -c $(CITIES) -p daily -h $(HOST)
+upload:
+	aws s3 sync _data s3://prayer-times-api-98607 --acl public-read
 
-.PHONY: default build_python build push run run_local install test stop up down
+test:
+	ls _data/api/*/*.json -l --sort=size
+
+.PHONY: default build_python build push run run_local install test stop up down upload
 

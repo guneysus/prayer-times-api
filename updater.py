@@ -35,14 +35,15 @@ def save_json(data, path, base_folder):
 @click.option('--city', '-c', type=str, required=True)
 @click.option('--period', '-p', type=str, required=True)
 @click.option('--host', '-h', type=str, required=True)
-def main(city, period, host):
+@click.option('--basedir', '-b', type=str, required=True)
+def main(city, period, host, basedir):
 
     helper = UrlHelper()
     url_list = helper.custom_cities(city.split(','), period.split(','))
     # full_urls = map(lambda x: (x, host + x), url_list)
     # dump_list(full_urls)
     results = map(lambda x: get_json(x, host), url_list)
-    file_results = map(lambda x: save_json( *x, '_data'), results)
+    file_results = map(lambda x: save_json( *x, basedir), results)
     return list(file_results)
 
 class UrlHelper:
