@@ -18,8 +18,8 @@ script:
   - docker-compose up -d # api
   - docker ps
   # - sudo chmod +rwx . -R
-  # - python3 updater.py -c istanbul -p daily -h http://127.0.0.1:8001 -b ${ARTIFACTS_FOLDER}
-  - curl -vv http://127.0.0.1:8001/api/istanbul/daily
+  - ./wait-for-it.sh -h 127.0.0.1 -p 8001 -t 1 -- python3 updater.py -c istanbul -p daily -h http://127.0.0.1:8001 -b ${ARTIFACTS_FOLDER}
+  # - curl -vv http://127.0.0.1:8001/api/istanbul/daily
   # - make update_daily
   # - make update_weekly
   # - make update_monthly
