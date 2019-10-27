@@ -19,7 +19,7 @@ script:
   - docker ps
   # - sudo chmod +rwx . -R
   # - python3 updater.py -c istanbul -p daily -h http://127.0.0.1:8001 -b ${ARTIFACTS_FOLDER}
-  - curl -vv http://httpbin.org/ip
+  - curl -vv http://127.0.0.1:8001/api/istanbul/daily
   # - make update_daily
   # - make update_weekly
   # - make update_monthly
