@@ -27,5 +27,6 @@ script:
   # - make update_daily
   # - make update_weekly
   # - make update_monthly
+  - make upload
 
 
