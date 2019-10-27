@@ -1,7 +1,7 @@
-SETUP_CMD=python setup.py
+SETUP_CMD=python3 setup.py
 PUSH_CMD=docker push
 BUILD_CMD=docker build 
-UPDATER=python updater.py
+UPDATER=python3 updater.py
 
 IMAGE=guneysu/prayer-times-api
 VERSION := $(shell cat VERSION)
@@ -42,8 +42,8 @@ update_%:
 
 update: update_daily update_weekly update_monthly
 	
-up:
-	docker-compose up -d --build
+up: build
+	docker-compose up -d --build --force-recreate --always-recreate-deps --remove-orphans 
 
 down:
 	docker-compose down
