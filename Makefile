@@ -9,7 +9,7 @@ ARGS=--build-arg VERSION=$(VERSION) -t
 PACKAGE=build_python
 BUILD=build
 ARTIFACTS_BUCKET=api.namazvakti.guneysu.xyz
-ARTIFACTS_FOLDER=/tmp/_data
+ARTIFACTS_FOLDER=/tmp/_data/api
 CITIES=istanbul,ankara,bursa,erzurum,eskisehir,gaziantep,izmir,kayseri,konya,sakarya,tekirdag
 HOST=http://localhost:8000
 

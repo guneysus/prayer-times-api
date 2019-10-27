@@ -1,16 +1,11 @@
 language: python
 python:
-# - "3.6"      # current default Python on Travis CI
   - "3.7"
 
 addons:
   apt:
     packages:
       - docker-ce
-  # artifacts:
-  #   working_dir: /tmp/_data/api
-  #   target_paths:
-  #     - /$TRAVIS_OS_NAME/$((lsb_release -rs 2>/dev/null || sw_vers -productVersion) | grep --only -E '^[0-9]+\.[0-9]+')
 
 before_install:
   - docker pull guneysu/prayer-times-api:latest
@@ -20,7 +15,7 @@ install:
   - pip install -r requirements.txt
 
 script: 
-  - make up
+  - docker-compose up -d
   - docker ps
   - sudo chmod +rwx . -R
   - python3 updater.py -c istanbul -p daily -h http://127.0.0.1:8000 -b ${ARTIFACTS_FOLDER}
