@@ -7,6 +7,8 @@ addons:
   apt:
     packages:
       - docker-ce
+  artifacts:
+    working_dir: _data      
 
 before_install:
   - docker pull guneysu/prayer-times-api:latest
