@@ -10,7 +10,7 @@ addons:
 
 before_install:
   - docker pull guneysu/prayer-times-api:latest
-  - pip3 install awscli --upgrade --user
+  - pip3 install awscli --upgrade
 
 install:
   - pip install -r requirements.txt
