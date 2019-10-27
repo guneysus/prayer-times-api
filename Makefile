@@ -11,7 +11,7 @@ BUILD=build
 ARTIFACTS_BUCKET=api.namazvakti.guneysu.xyz
 ARTIFACTS_FOLDER=/tmp/_data
 CITIES=istanbul,ankara,bursa,erzurum,eskisehir,gaziantep,izmir,kayseri,konya,sakarya,tekirdag
-HOST=http://localhost:8000
+HOST=http://127.0.0.1:8000
 
 default: build
 
@@ -39,7 +39,7 @@ stop:
 	docker ps --no-trunc -q | xargs docker stop
 
 update_%:
-	$(UPDATER) -c $(CITIES) -p $* -h $(HOST) -b $(ARTIFACTS_FOLDER)
+	./wait-for-it.sh -h 127.0.0.1 -p 8000 -t 1 -- $(UPDATER) -c $(CITIES) -p $* -h $(HOST) -b $(ARTIFACTS_FOLDER)
 
 update: update_daily update_weekly update_monthly
 	
