@@ -15,7 +15,7 @@ install:
   - pip install -r requirements.txt
 
 script: 
-  - docker-compose up -d
+  - docker-compose up -d api
   - docker ps
   - sudo chmod +rwx . -R
   - python3 updater.py -c istanbul -p daily -h http://127.0.0.1:8000 -b ${ARTIFACTS_FOLDER}
