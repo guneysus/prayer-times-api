@@ -50,7 +50,7 @@ down:
 	docker-compose down
 
 upload:
-	aws s3 sync --content-type "application/json" --delete --no-guess-mime-type $(ARTIFACTS_FOLDER)/api s3://$(ARTIFACTS_BUCKET) --acl public-read
+	aws s3 sync --content-type "application/json" --no-guess-mime-type $(ARTIFACTS_FOLDER)/api s3://$(ARTIFACTS_BUCKET) --acl public-read
 
 test:
 	ls _data/api/*/*.json -l --sort=size
