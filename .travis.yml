@@ -18,7 +18,7 @@ install:
 script: 
   - make up
   - docker ps
-  - chmod +rwx _data -R
+  - sudo chmod +rwx . -R
   - python3 updater.py -c istanbul -p daily -h http://127.0.0.1:8000 -b _data
   # - make update_daily
   # - make update_weekly
