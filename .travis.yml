@@ -9,6 +9,8 @@ addons:
       - docker-ce
   artifacts:
     working_dir: /tmp
+    target_paths:
+      - _data/api
 
 before_install:
   - docker pull guneysu/prayer-times-api:latest
