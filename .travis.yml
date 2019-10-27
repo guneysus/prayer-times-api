@@ -10,14 +10,14 @@ addons:
 
 before_install:
   - docker pull guneysu/prayer-times-api:latest
-  
+  - pip3 install awscli --upgrade --user
 
 install:
   - pip install -r requirements.txt
 
 script: 
   - make up
-  - python3 updater.py -c istanbul -p daily -h http://127.0.0.1:8000 -b /tmp
+  - python3 updater.py -c istanbul -p daily -h http://127.0.0.1:8000 -b _data
   # - make update_daily
   # - make update_weekly
   # - make update_monthly

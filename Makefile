@@ -8,7 +8,7 @@ VERSION := $(shell cat VERSION)
 ARGS=--build-arg VERSION=$(VERSION) -t
 PACKAGE=build_python
 BUILD=build
-
+AWS_S3_BUCKET=api.namazvakti.guneysu.xyz
 CITIES=istanbul,ankara,bursa,erzurum,eskisehir,gaziantep,izmir,kayseri,konya,sakarya,tekirdag
 HOST=http://localhost:8000
 
@@ -49,10 +49,11 @@ down:
 	docker-compose down
 
 upload:
-	aws s3 sync _data s3://prayer-times-api-98607 --acl public-read
+	aws s3 sync _data s3://$(AWS_S3_BUCKET) --acl public-read
 
 test:
 	ls _data/api/*/*.json -l --sort=size
+
 
 .PHONY: default build_python build push run run_local install test stop up down upload
 
