@@ -23,7 +23,7 @@ def get_json(path, host):
     return (r.json(), path)
 
 def save_json(data, path, base_folder):
-    file_path = base_folder + path + '.json'
+    file_path = base_folder + path # + '.json'
     ensure_dir(file_path)
 
     with codecs.open(file_path, 'w', encoding='utf-8') as f:
