@@ -8,7 +8,9 @@ addons:
     packages:
       - docker-ce
   artifacts:
-    working_dir: _data      
+    working_dir: /tmp
+    target_paths:
+      - _data
 
 before_install:
   - docker pull guneysu/prayer-times-api:latest
@@ -21,7 +23,7 @@ script:
   - make up
   - docker ps
   - sudo chmod +rwx . -R
-  - python3 updater.py -c istanbul -p daily -h http://127.0.0.1:8000 -b _data
+  - python3 updater.py -c istanbul -p daily -h http://127.0.0.1:8000 -b ${ARTIFACTS_FOLDER}
   # - make update_daily
   # - make update_weekly
   # - make update_monthly

@@ -9,7 +9,7 @@ ARGS=--build-arg VERSION=$(VERSION) -t
 PACKAGE=build_python
 BUILD=build
 ARTIFACTS_BUCKET=api.namazvakti.guneysu.xyz
-ARTIFACTS_FOLDER=/tmp/_data
+ARTIFACTS_FOLDER=_data
 CITIES=istanbul,ankara,bursa,erzurum,eskisehir,gaziantep,izmir,kayseri,konya,sakarya,tekirdag
 HOST=http://localhost:8000
 
@@ -50,7 +50,7 @@ down:
 	docker-compose down
 
 upload:
-	aws s3 sync _data s3://$(ARTIFACTS_BUCKET) --acl public-read
+	aws s3 sync $(ARTIFACTS_FOLDER) s3://$(ARTIFACTS_BUCKET) --acl public-read
 
 test:
 	ls _data/api/*/*.json -l --sort=size
