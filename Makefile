@@ -8,7 +8,8 @@ VERSION := $(shell cat VERSION)
 ARGS=--build-arg VERSION=$(VERSION) -t
 PACKAGE=build_python
 BUILD=build
-AWS_S3_BUCKET=api.namazvakti.guneysu.xyz
+ARTIFACTS_BUCKET=api.namazvakti.guneysu.xyz
+ARTIFACTS_FOLDER=/tmp/_data
 CITIES=istanbul,ankara,bursa,erzurum,eskisehir,gaziantep,izmir,kayseri,konya,sakarya,tekirdag
 HOST=http://localhost:8000
 
@@ -38,7 +39,7 @@ stop:
 	docker ps --no-trunc -q | xargs docker stop
 
 update_%:
-	$(UPDATER) -c $(CITIES) -p $* -h $(HOST) -b _data
+	$(UPDATER) -c $(CITIES) -p $* -h $(HOST) -b $(ARTIFACTS_FOLDER)
 
 update: update_daily update_weekly update_monthly
 	
@@ -49,7 +50,7 @@ down:
 	docker-compose down
 
 upload:
-	aws s3 sync _data s3://$(AWS_S3_BUCKET) --acl public-read
+	aws s3 sync _data s3://$(ARTIFACTS_BUCKET) --acl public-read
 
 test:
 	ls _data/api/*/*.json -l --sort=size
