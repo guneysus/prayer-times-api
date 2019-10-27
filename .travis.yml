@@ -7,10 +7,10 @@ addons:
   apt:
     packages:
       - docker-ce
-  artifacts:
-    working_dir: /tmp/_data/api
-    target_paths:
-      - /$TRAVIS_OS_NAME/$((lsb_release -rs 2>/dev/null || sw_vers -productVersion) | grep --only -E '^[0-9]+\.[0-9]+')
+  # artifacts:
+  #   working_dir: /tmp/_data/api
+  #   target_paths:
+  #     - /$TRAVIS_OS_NAME/$((lsb_release -rs 2>/dev/null || sw_vers -productVersion) | grep --only -E '^[0-9]+\.[0-9]+')
 
 before_install:
   - docker pull guneysu/prayer-times-api:latest
