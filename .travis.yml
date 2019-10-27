@@ -17,7 +17,7 @@ install:
 
 script: 
   - make up
-  - python3 -c istanbul -p daily -h http://127.0.0.1:8000 -b /tmp
+  - python3 updater.py -c istanbul -p daily -h http://127.0.0.1:8000 -b /tmp
   # - make update_daily
   # - make update_weekly
   # - make update_monthly
