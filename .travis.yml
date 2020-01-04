@@ -20,7 +20,7 @@ script:
   - docker-compose up -d # api
   - docker ps
   - ./wait-for-it.sh -h 127.0.0.1 -p 8000 -t 1 -- python3 updater.py -c istanbul -p daily -h http://127.0.0.1:8000 -b ${ARTIFACTS_FOLDER}
-  - make update_daily # update_weekly make update_monthly
+  - make update_daily update_weekly # update_monthly
   - make upload
 
 
