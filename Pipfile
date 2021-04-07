@@ -8,7 +8,7 @@ pylint = "*"
 rope = "*"
 
 [packages]
-bottle = "==0.12.16"
+bottle = "==0.12.19"
 "suds-py3" = "==1.3.3.0"
 
 [requires]
